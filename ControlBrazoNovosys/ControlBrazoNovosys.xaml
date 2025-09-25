@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ControlBrazoNovosys.ControlBrazoNovosys">
+    <ScrollView>
+
+        <VerticalStackLayout Padding="0,0" Spacing="5">
+            <Grid HeightRequest="100" HorizontalOptions="Fill" VerticalOptions="Start">
+                <Image Source="superior.png"
+                       Aspect="Fill"
+                       HorizontalOptions="Fill"
+                       VerticalOptions="Fill"/>
+                <ImageButton x:Name="logo"
+                             Source="logo.png"
+                             Aspect="AspectFit"
+                             HeightRequest="85"
+                             WidthRequest="200"
+                             HorizontalOptions="Start"
+                             VerticalOptions="Start"
+                             BackgroundColor="Transparent"
+                             Clicked="logo_Clicked"/>
+            </Grid>
+            <VerticalStackLayout VerticalOptions="Center">
+                <Label Text="C  O  N  T  R  O  L    D  E    B  R  A  Z  O    R  O  B  Ò  T  I  C  O" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout Padding="10,0" Spacing="5" VerticalOptions="Fill">
+                <Picker x:Name="ConexionPicker" Title="Seleccionar Puertos"
+                        WidthRequest="300" VerticalOptions="Center"/>
+                <Frame BackgroundColor="#1976D2"
+                       CornerRadius="10"
+                       HasShadow="False"
+                       Padding="2"
+                       HeightRequest="65"
+                       WidthRequest="65"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center">
+
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="BtnConectar_Clicked"/>
+                    </Frame.GestureRecognizers>
+
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton Source="conectar.png"
+                                     HeightRequest="20"
+                                     WidthRequest="20"
+                                     BackgroundColor="Transparent"
+                                     Clicked="BtnConectar_Clicked"/>
+                        <Label Text="Conectar"
+                               FontSize="10"
+                               TextColor="White"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </HorizontalStackLayout>
+            <VerticalStackLayout VerticalOptions="Fill">
+                <Label x:Name="lbl_Etiqueta" Text="B R A Z O  E N  P O S I C I O N  I N I C I A L ! ! !" FontAttributes="Italic" FontSize="18" HorizontalOptions="End" WidthRequest="600" />
+            </VerticalStackLayout>
+
+
+            <Grid Padding="20" HorizontalOptions="Center" VerticalOptions="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400"/>
+                    <!-- Labels -->
+                    <ColumnDefinition Width="500"/>
+                    <!-- Sliders -->
+                    <ColumnDefinition Width="100"/>
+                    <!-- Botones 1 -->
+                    <ColumnDefinition Width="200"/>
+                    <!--Botones 2-->
+                    <ColumnDefinition Width="200"/>
+                    <!--Editor-->
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+
+                <Label Grid.Row="0" 
+                       Grid.Column="0" 
+                       Text="Garra" 
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+                <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <Slider x:Name="servoSlider" 
+                            Minimum="0" 
+                            Maximum="90" 
+                            Value="90"
+                            ValueChanged="servoSlider_ValueChanged"
+                            WidthRequest="350" 
+                            ThumbColor="#1976D2"
+                            MinimumTrackColor="#EF850C" 
+                            MaximumTrackColor="Gray"
+                            VerticalOptions="Center"/>
+                    <Label x:Name="lblAngulo" Text="90°" WidthRequest="40" VerticalOptions="Center"/>
+                </StackLayout>
+
+                <Frame Grid.Row="0" 
+                       Grid.Column="2" 
+                       BackgroundColor="#1976D2"
+                       CornerRadius="10" 
+                       Padding="10" 
+                       HeightRequest="100" 
+                       WidthRequest="100"
+                       HasShadow="False" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="GuardarButton_Clicked"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" 
+                                         VerticalOptions="Center">
+                        <ImageButton Source="guardar.png" 
+                                     HeightRequest="40" 
+                                     WidthRequest="40"
+                                     BackgroundColor="Transparent" 
+                                     Clicked="GuardarButton_Clicked"/>
+                        <Label Text="Guardar" 
+                               FontSize="12" 
+                               TextColor="White" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+
+                <Label Grid.Row="1" 
+                       Grid.Column="0" 
+                       Text="Muñeca Pitch" 
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <StackLayout Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <Slider x:Name="servoSlider2" 
+                            Minimum="0" 
+                            Maximum="180" 
+                            Value="90"
+                            ValueChanged="servoSlider2_ValueChanged"
+                            WidthRequest="350" 
+                            ThumbColor="#1976D2"
+                            MinimumTrackColor="#EF850C" 
+                            MaximumTrackColor="Gray"
+                            VerticalOptions="Center"/>
+                    <Label x:Name="lblAngulo2" Text="90°" WidthRequest="40" VerticalOptions="Center"/>
+                </StackLayout>
+                <Frame Grid.Row="0" 
+                       Grid.Column="3" 
+                       BackgroundColor="#1976D2"
+                       CornerRadius="10" 
+                       Padding="10" 
+                       HeightRequest="100" 
+                       WidthRequest="100"
+                       HasShadow="False" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ReproducirButton_Clicked"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton Source="reproducir.png" 
+                                     HeightRequest="40" 
+                                     WidthRequest="40"
+                                     BackgroundColor="Transparent" 
+                                     Clicked="ReproducirButton_Clicked"/>
+                        <Label Text="Reproducir" FontSize="12" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+
+                <Label Grid.Row="2" 
+                       Grid.Column="0" 
+                       Text="Muñeca Yaw" 
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <StackLayout Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <Slider x:Name="servoSlider3" 
+                            Minimum="0" 
+                            Maximum="180" 
+                            Value="90"
+                            ValueChanged="servoSlider3_ValueChanged"
+                            WidthRequest="350" ThumbColor="#1976D2"
+                            MinimumTrackColor="#EF850C" 
+                            MaximumTrackColor="Gray"
+                            VerticalOptions="Center"/>
+                    <Label x:Name="lblAngulo3" Text="90°" WidthRequest="40" VerticalOptions="Center"/>
+                </StackLayout>
+                <Frame Grid.Row="2" 
+                       Grid.Column="2" 
+                       BackgroundColor="#1976D2"
+                       CornerRadius="10" 
+                       Padding="10" 
+                       HeightRequest="100"
+                       WidthRequest="100"
+                       HasShadow="False" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="DetenerButton_Clicked"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton Source="detener.png" 
+                                     HeightRequest="40" 
+                                     WidthRequest="40"
+                                     BackgroundColor="Transparent" 
+                                     Clicked="DetenerButton_Clicked"/>
+                        <Label Text="Detener" FontSize="12" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+
+                <Label Grid.Row="3" 
+                       Grid.Column="0" 
+                       Text="Antebrazo" 
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <StackLayout Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <Slider x:Name="servoSlider4" 
+                            Minimum="0" 
+                            Maximum="180" 
+                            Value="90"
+                            ValueChanged="servoSlider4_ValueChanged"
+                            WidthRequest="350" 
+                            ThumbColor="#1976D2"
+                            MinimumTrackColor="#EF850C" 
+                            MaximumTrackColor="Gray"
+                            VerticalOptions="Center"/>
+                    <Label x:Name="lblAngulo4" Text="90°" WidthRequest="40" VerticalOptions="Center"/>
+                </StackLayout>
+                <Frame Grid.Row="2" 
+                       Grid.Column="3" 
+                       BackgroundColor="#1976D2"
+                       CornerRadius="10" 
+                       Padding="10" 
+                       HeightRequest="100" 
+                       WidthRequest="100"
+                       HasShadow="False" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ExportarButton_Clicked"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton Source="export.png" 
+                                     HeightRequest="40" 
+                                     WidthRequest="40"
+                                     BackgroundColor="Transparent" 
+                                     Clicked="ExportarButton_Clicked"/>
+                        <Label Text="Exportar" 
+                               FontSize="12" 
+                               TextColor="White" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Posiciones" FontSize="12" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+
+                <Label Grid.Row="4" 
+                       Grid.Column="0" 
+                       Text="Brazo" 
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <StackLayout Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <Slider x:Name="servoSlider5" 
+                            Minimum="0" 
+                            Maximum="180" 
+                            Value="90"
+                            ValueChanged="servoSlider5_ValueChanged"
+                            WidthRequest="350" 
+                            ThumbColor="#1976D2"
+                            MinimumTrackColor="#EF850C" 
+                            MaximumTrackColor="Gray"
+                            VerticalOptions="Center"/>
+                    <Label x:Name="lblAngulo5" Text="90°" WidthRequest="40" VerticalOptions="Center"/>
+                </StackLayout>
+                <Frame Grid.Row="4" 
+                       Grid.Column="2" 
+                       BackgroundColor="#1976D2"
+                       CornerRadius="10" 
+                       Padding="10" 
+                       HeightRequest="100" 
+                       WidthRequest="100"
+                       HasShadow="False" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ImportarButton_Clicked"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton Source="importar.png" 
+                                     HeightRequest="40" 
+                                     WidthRequest="40"
+                                     BackgroundColor="Transparent" 
+                                     Clicked="ImportarButton_Clicked"/>
+                        <Label Text="Importar" FontSize="12" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Text="Posiciones" FontSize="12" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+
+                <Label Grid.Row="5"
+                       Grid.Column="0" 
+                       Text="Base" 
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <StackLayout Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <Slider x:Name="servoSlider6" 
+                            Minimum="0" 
+                            Maximum="180" 
+                            Value="90"
+                            ValueChanged="servoSlider6_ValueChanged"
+                            WidthRequest="350" 
+                            ThumbColor="#1976D2"
+                            MinimumTrackColor="#EF850C" 
+                            MaximumTrackColor="Gray"
+                            VerticalOptions="Center"/>
+                    <Label x:Name="lblAngulo6" Text="90°" WidthRequest="40" VerticalOptions="Center"/>
+                </StackLayout>
+                <Frame Grid.Row="4" 
+                       Grid.Column="3" 
+                       BackgroundColor="#1976D2"
+                       CornerRadius="10" 
+                       Padding="10" 
+                       HeightRequest="100" 
+                       WidthRequest="100"
+                       HasShadow="False" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="LimpiarButton_Clicked"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton Source="limpiar.png" 
+                                     HeightRequest="40" 
+                                     WidthRequest="40"
+                                     BackgroundColor="Transparent" 
+                                     Clicked="LimpiarButton_Clicked"/>
+                        <Label Text="Limpiar" FontSize="12" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Text="Posiciones" FontSize="12" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Row="6" 
+                       Grid.Column="2" 
+                       BackgroundColor="#1976D2"
+                       CornerRadius="10" 
+                       Padding="10" 
+                       HeightRequest="100" 
+                       WidthRequest="100"
+                       HasShadow="False" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="IniciarBanda_Clicked"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton Source="cinta.png" 
+                                     HeightRequest="40" 
+                                     WidthRequest="40"
+                                     BackgroundColor="Transparent" 
+                                     Clicked="IniciarBanda_Clicked"/>
+                        <Label Text="Iniciar Banda" FontSize="11" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Text="Transportadora" FontSize="10" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Row="6" 
+                       Grid.Column="3" 
+                       BackgroundColor="#1976D2"
+                       CornerRadius="10" 
+                       Padding="10" 
+                       HeightRequest="100" 
+                       WidthRequest="100"
+                       HasShadow="False" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="DetenerBanda_Clicked"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton Source="cinta2.png" 
+                                     HeightRequest="40" 
+                                     WidthRequest="40"
+                                     BackgroundColor="Transparent" 
+                                     Clicked="DetenerBanda_Clicked"/>
+                        <Label Text="Detener Banda" FontSize="10" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Text="Transportadora" FontSize="10" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+
+                <Label Grid.Row="3" 
+                       Grid.Column="4" 
+                       Text="Registro de Posiciones"
+                       FontAttributes="Bold"
+                       Margin="0,10,0,0" 
+                       HorizontalOptions="Center"/>
+
+                <Editor Grid.Row="4" 
+                        Grid.Column="4" 
+                        x:Name="PosicionesEditor"
+                        HeightRequest="100"
+                        Placeholder="Aquí aparecerán las posiciones guardadas (una por línea, formato: P1,P2,P3,P4,P5,P6)..."
+                        AutoSize="TextChanges"
+                        HorizontalOptions="Center"
+                        VerticalOptions="FillAndExpand" />
+
+                <VerticalStackLayout Grid.Row="6" Grid.Column="4" Spacing="5" HorizontalOptions="Center">
+                    <Frame 
+                        HeightRequest="40"
+                        WidthRequest="120"
+                        BackgroundColor="#1976D2"
+                        CornerRadius="10"
+                        Padding="10" 
+                        HasShadow="False" 
+                        HorizontalOptions="Center" 
+                        VerticalOptions="Center">
+
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="ActualizarDesdeEditor_Clicked"/>
+                        </Frame.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center" HorizontalOptions="Center">
+                            <Label Text="Actualizar" 
+                                   FontSize="10" 
+                                   TextColor="White" 
+                                   FontAttributes="Bold" 
+                                   VerticalOptions="Center"/>
+                            <Image Source="editar.png" 
+                                   HeightRequest="20" 
+                                   WidthRequest="20"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Frame>
+
+                    <Frame 
+                        HeightRequest="40"
+                        WidthRequest="120"
+                        BackgroundColor="#1976D2"
+                        CornerRadius="10"
+                        Padding="10" 
+                        HasShadow="False" 
+                        HorizontalOptions="Center" 
+                        VerticalOptions="Center">
+
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="EliminarDesdeEditor_Clicked"/>
+                        </Frame.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center" HorizontalOptions="Center">
+                            <Label Text="Eliminar" 
+                                   FontSize="10" 
+                                   TextColor="White" 
+                                   FontAttributes="Bold" 
+                                   VerticalOptions="Center"/>
+                            <Image Source="basura.png" 
+                                   HeightRequest="20" 
+                                   WidthRequest="20"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+
+                <Label Grid.Row="6" Grid.Column="0"
+                       x:Name="lbltemperatura"
+                       FontSize="14"
+                       TextColor="Black"
+                       FontAttributes="Italic"
+                       HorizontalOptions="Start"
+                       VerticalOptions="End"
+                       LineBreakMode="NoWrap"
+                       HorizontalTextAlignment="Start"/>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
