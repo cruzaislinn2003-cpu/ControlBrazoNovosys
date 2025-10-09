@@ -1,14 +1,19 @@
 using CommunityToolkit.Maui.Storage;
 using System.IO.Ports;
+using System.Net.Sockets;
 
 namespace ControlBrazoNovosys;
 
 public partial class ControlBrazoNovosys : ContentPage
 {
     SerialPort serialPort = new SerialPort();
+    bool modoWiFi = false;
+    TcpClient tcpClient;
+    StreamWriter wifiStream;
 
-    //lista para guardar posiciones de los servos
-    List<(int s1, int s2, int s3, int s4, int s5, int s6)> posicionesGuardadas = new List<(int, int, int, int, int, int)>();
+
+//lista para guardar posiciones de los servos
+List<(int s1, int s2, int s3, int s4, int s5, int s6)> posicionesGuardadas = new List<(int, int, int, int, int, int)>();
 
     private CancellationTokenSource ctsReproduccion;
 
@@ -18,7 +23,6 @@ public partial class ControlBrazoNovosys : ContentPage
 
 #if WINDOWS
         var ports = SerialPort.GetPortNames();
-        ConexionPicker.ItemsSource = ports.ToList();
 #endif
     }
 
@@ -26,44 +30,50 @@ public partial class ControlBrazoNovosys : ContentPage
 
     private async void BtnConectar_Clicked(object sender, EventArgs e)
     {
-#if WINDOWS
         try
         {
-            if (ConexionPicker.SelectedItem == null)
+            if (modoWiFi)
             {
-                await DisplayAlert("Error", "Selecciona un puerto", "OK");
-                return;
+                string ip = ipEntry.Text;
+                if (string.IsNullOrWhiteSpace(ip))
+                {
+                    await DisplayAlert("Error", "Por favor ingresa una dirección IP válida.", "OK");
+                    return;
+                }
+
+                tcpClient = new TcpClient();
+                await tcpClient.ConnectAsync(ip, 80);
+                wifiStream = new StreamWriter(tcpClient.GetStream()) { AutoFlush = true };
+
+                await DisplayAlert("Conectado", $"Conectado al ESP32 vía WiFi ({ip})", "OK");
             }
+            else
+            {
+                if (portPicker.SelectedItem == null)
+                {
+                    await DisplayAlert("Error", "Selecciona un puerto serial.", "OK");
+                    return;
+                }
 
-            if (serialPort.IsOpen)
-                serialPort.Close();
+                string selectedPort = portPicker.SelectedItem.ToString();
+                serialPort = new SerialPort(selectedPort, 9600);
+                serialPort.Open();
 
-            serialPort.PortName = ConexionPicker.SelectedItem.ToString();
-            serialPort.BaudRate = 9600;
-            serialPort.Open();
-
-            
-
-            serialPort.Write("J"); //azul al conectar
-            await DisplayAlert("Éxito", "Conectado por Serial", "OK");
-            
-
+                await DisplayAlert("Conectado", $"Conectado al puerto {selectedPort}", "OK");
+            }
         }
         catch (Exception ex)
         {
-        
-            await DisplayAlert("Error", "No se pudo conectar: " + ex.Message, "OK");
+            await DisplayAlert("Error", $"No se pudo conectar: {ex.Message}", "OK");
         }
-#else
-        await DisplayAlert("NOVOSYS STEAM", "Conexión serial solo disponible en Windows", "OK");
-#endif
     }
+
 
     private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
     {
         try
         {
-            string data = serialPort.ReadLine();
+            string data = serialPort.ReadLine(); // ejemplo: "25.4,60.2"
             string[] valores = data.Split(',');
 
             if (valores.Length == 2)
@@ -73,13 +83,38 @@ public partial class ControlBrazoNovosys : ContentPage
 
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    lbltemperatura.Text = $"Temperatura: {temp} °C | Humedad: {hum} % ";
-
+                    lbltemperatura.Text = $"Temperatura: {temp} °C | Humedad: {hum} %";
                 });
             }
         }
         catch
         {
+            
+        }
+    }
+
+    private async void BtnDesconectar_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            if (modoWiFi)
+            {
+                wifiStream?.Close();
+                tcpClient?.Close();
+                await DisplayAlert("Desconectado", "Conexión WiFi cerrada correctamente.", "OK");
+            }
+            else
+            {
+                if (serialPort != null && serialPort.IsOpen)
+                {
+                    serialPort.Close();
+                    await DisplayAlert("Desconectado", "Puerto serial cerrado correctamente.", "OK");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Ocurrió un problema al desconectar: {ex.Message}", "OK");
         }
     }
 
@@ -185,7 +220,7 @@ public partial class ControlBrazoNovosys : ContentPage
     private async void ReproducirButton_Clicked(object sender, EventArgs e)
     {
         if (serialPort?.IsOpen == true)
-            serialPort.Write("V");
+            serialPort.Write("H"); //rojo
         lbl_Etiqueta.Text = "R E P R O D U C I E N D O   P O S I C I O N E S";
 
         if (posicionesGuardadas.Count < 2)
@@ -316,7 +351,7 @@ public partial class ControlBrazoNovosys : ContentPage
     private async void DetenerButton_Clicked(object sender, EventArgs e)
     {
         if (serialPort?.IsOpen == true)
-            serialPort.Write("H"); //rojo al detener
+            serialPort.Write("V");
         ctsReproduccion?.Cancel();
         await DisplayAlert("NOVOSYS STEAM", "Movimiento detenido", "OK");
 
@@ -528,6 +563,9 @@ public partial class ControlBrazoNovosys : ContentPage
             await DisplayAlert("Error", "Número inválido.", "OK");
         }
     }
+
+    
+
 
     private async void IniciarBanda_Clicked(object sender, EventArgs e)
     {

@@ -25,32 +25,34 @@
             </VerticalStackLayout>
 
             <HorizontalStackLayout Padding="10,0" Spacing="5" VerticalOptions="Fill">
-                <Picker x:Name="ConexionPicker" Title="Seleccionar Puertos"
-                        WidthRequest="300" VerticalOptions="Center"/>
-                <Frame BackgroundColor="#1976D2"
-                       CornerRadius="10"
-                       HasShadow="False"
-                       Padding="2"
-                       HeightRequest="65"
-                       WidthRequest="65"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center">
+                <Frame BorderColor="#2D9BF0" CornerRadius="15" Padding="15" Margin="10">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Modo de Conexión" FontAttributes="Bold" FontSize="16" />
 
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="BtnConectar_Clicked"/>
-                    </Frame.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="20">
+                            <CheckBox x:Name="chkSerial" IsChecked="True" CheckedChanged="chkSerial_CheckedChanged" />
+                            <Label Text="Serial" VerticalOptions="Center" />
 
-                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                        <ImageButton Source="conectar.png"
-                                     HeightRequest="20"
-                                     WidthRequest="20"
-                                     BackgroundColor="Transparent"
-                                     Clicked="BtnConectar_Clicked"/>
-                        <Label Text="Conectar"
-                               FontSize="10"
-                               TextColor="White"
-                               FontAttributes="Bold"
-                               HorizontalOptions="Center"/>
+                            <CheckBox x:Name="chkWiFi" CheckedChanged="chkWiFi_CheckedChanged" />
+                            <Label Text="WiFi" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <!-- SECCIÓN SERIAL -->
+                        <StackLayout x:Name="SerialLayout">
+                            <Label Text="Seleccionar Puerto Serial:" />
+                            <Picker x:Name="portPicker" Title="Selecciona un puerto" />
+                        </StackLayout>
+
+                        <!-- SECCIÓN WIFI -->
+                        <StackLayout x:Name="WiFiLayout" IsVisible="False">
+                            <Label Text="IP del ESP32:" />
+                            <Entry x:Name="ipEntry" Placeholder="192.168.1.100" Keyboard="Numeric" />
+                        </StackLayout>
+
+                        <HorizontalStackLayout Spacing="10">
+                            <Button Text="Conectar" x:Name="BtnConectar" Clicked="BtnConectar_Clicked" BackgroundColor="#2D9BF0" TextColor="White" />
+                            <Button Text="Desconectar" x:Name="BtnDesconectar" Clicked="BtnDesconectar_Clicked" BackgroundColor="Red" TextColor="White" />
+                        </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </Frame>
             </HorizontalStackLayout>
