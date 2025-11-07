@@ -1,0 +1,471 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="babylon.js"></script>
+    <script src="babylonjs.loaders.min.js"></script>
+    <link rel="icon" href="data:,">
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #111;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            display: block;
+        }
+
+        #loading {
+            position: absolute;
+            left: 12px;
+            top: 8px;
+            padding: 6px 10px;
+            background: rgba(0,0,0,.6);
+            color: #fff;
+            font-family: system-ui, sans-serif;
+            border-radius: 8px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">Cargando modelos STL...</div>
+    <canvas id="renderCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
+        let scene;
+        let soporteRoot, baseRoot, ejeRoot, antebrazoRoot, brazoRoot, munecaRoot, baseGarraRoot, engranaje1Root, engranaje2Root, barra1Root, barra2Root, pinza2Root, pinza1Root;
+        let camera;
+
+        function createScene() {
+            scene = new BABYLON.Scene(engine);
+
+            //fondo negro para evitar pantalla azul
+            scene.clearColor = new BABYLON.Color3(1, 1, 1);
+
+            scene.createDefaultEnvironment({
+                createGround: true,
+                groundSize: 400,
+                enableGroundShadow: true
+            });
+
+            //camara
+            camera = new BABYLON.ArcRotateCamera("cam",
+                -Math.PI / 2, Math.PI / 2.6, 200,
+                BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
+            camera.wheelPrecision = 0.1;
+            camera.pinchPrecision = 1;
+
+            //luces
+            new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
+            const dir = new BABYLON.DirectionalLight("dir", new BABYLON.Vector3(-1, -2, -1), scene);
+            dir.position = new BABYLON.Vector3(40, 80, 40);
+
+            const shadowGen = new BABYLON.ShadowGenerator(2048, dir);
+            shadowGen.useExponentialShadowMap = true;
+
+            //ajustar la camara
+            function ajustarCamaraAlModelo() {
+                const meshes = scene.meshes.filter(m => m && m.name !== "__root__");
+                if (meshes.length === 0) return;
+
+                let min = new BABYLON.Vector3(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
+                let max = new BABYLON.Vector3(-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
+
+                meshes.forEach(m => {
+                    const bb = m.getBoundingInfo().boundingBox;
+                    min = BABYLON.Vector3.Minimize(min, bb.minimumWorld);
+                    max = BABYLON.Vector3.Maximize(max, bb.maximumWorld);
+                });
+
+                const center = min.add(max).scale(0.5);
+                const extents = max.subtract(min);
+                const maxExtent = Math.max(extents.x, extents.y, extents.z);
+
+                camera.setTarget(center);
+                camera.radius = maxExtent * 2;
+            }
+
+            //base
+            BABYLON.SceneLoader.ImportMesh("", "", "Soporte.stl", scene, (meshes) => {
+                soporteRoot = new BABYLON.TransformNode("soporteRoot", scene);
+                meshes.forEach(m => m.parent = soporteRoot);
+                soporteRoot.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                
+                const materialSoporte = new BABYLON.StandardMaterial("materialSoporte", scene);
+                materialSoporte.diffuseColor = new BABYLON.Color3(0, 0, 1); 
+                materialSoporte.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2); // brillo
+                meshes.forEach(m => m.material = materialSoporte);
+
+                
+                const bbSoporte = soporteRoot.getHierarchyBoundingVectors(true);
+                const soporteHeight = bbSoporte.max.y - bbSoporte.min.y;
+                soporteRoot.position.y -= bbSoporte.min.y; 
+
+                soporteRoot.rotation.y = 90 * Math.PI / 180;
+
+                BABYLON.SceneLoader.ImportMesh("", "", "Base.stl", scene, (meshes) => {
+                    baseRoot = new BABYLON.TransformNode("baseRoot", scene);
+                    meshes.forEach(m => m.parent = baseRoot);
+                    baseRoot.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                    const materialBase = new BABYLON.StandardMaterial("materialBase", scene);
+                    materialBase.diffuseColor = new BABYLON.Color3(1, 1, 1);
+                    materialBase.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                    meshes.forEach(m => m.material = materialBase);
+
+                    const bbBase = baseRoot.getHierarchyBoundingVectors(true);
+                    const baseHeight = bbBase.max.y - bbBase.min.y;
+                    baseRoot.position.y -= bbBase.min.y;
+
+                    baseRoot.rotation.y = 90 * Math.PI / 180;
+
+                    //eje central
+                    BABYLON.SceneLoader.ImportMesh("", "", "EjeCentral.stl", scene, (meshes) => {
+                        ejeRoot = new BABYLON.TransformNode("ejeRoot", scene);
+                        meshes.forEach(m => m.parent = ejeRoot);
+                        ejeRoot.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                        const materialEje = new BABYLON.StandardMaterial("materialEje", scene);
+                        materialEje.diffuseColor = new BABYLON.Color3(0, 0, 1);
+                        materialEje.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                        meshes.forEach(m => m.material = materialEje);
+
+                        const bbEje = ejeRoot.getHierarchyBoundingVectors(true);
+                        const ejeMinY = bbEje.min.y;
+                        ejeRoot.position.y += (baseHeight - ejeMinY);
+
+                        ejeRoot.rotation.y = 90 * Math.PI / 180;
+
+                        //antebrazo
+                        BABYLON.SceneLoader.ImportMesh("", "", "Antebrazo.stl", scene, (meshes) => {
+                            antebrazoRoot = new BABYLON.TransformNode("antebrazoRoot", scene);
+                            meshes.forEach(m => m.parent = antebrazoRoot);
+                            antebrazoRoot.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                            const materialAntebrazo = new BABYLON.StandardMaterial("materialAntebrazo", scene);
+                            materialAntebrazo.diffuseColor = new BABYLON.Color3(0, 0, 1);
+                            materialAntebrazo.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                            meshes.forEach(m => m.material = materialAntebrazo);
+
+                            const placeAntebrazo = () => {
+                                if (ejeRoot) {
+                                    const bbEjeWorld = ejeRoot.getHierarchyBoundingVectors(true);
+                                    const ejeMaxYWorld = bbEjeWorld.max.y;
+
+                                    const bbAntebrazo = antebrazoRoot.getHierarchyBoundingVectors(true);
+                                    const antebrazoMinY = bbAntebrazo.min.y;
+
+                                    antebrazoRoot.position.y += (ejeMaxYWorld - antebrazoMinY) - 45;
+                                    antebrazoRoot.rotation.y = 90 * Math.PI / 180;
+                                    
+                                }
+                            };
+
+                            placeAntebrazo();
+                            setTimeout(placeAntebrazo, 200);
+
+                            //brazo
+                            BABYLON.SceneLoader.ImportMesh("", "", "Brazo.stl", scene, (meshes) => {
+                                brazoRoot = new BABYLON.TransformNode("brazoRoot", scene);
+                                meshes.forEach(m => m.parent = brazoRoot);
+                                brazoRoot.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                                const materialBrazo = new BABYLON.StandardMaterial("materialBrazo", scene);
+                                materialBrazo.diffuseColor = new BABYLON.Color3(1, 1, 1);
+                                materialBrazo.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                                meshes.forEach(m => m.material = materialBrazo);
+
+                                const placeBrazo = () => {
+                                    if (antebrazoRoot) {
+                                        const bbAntebrazoWorld = antebrazoRoot.getHierarchyBoundingVectors(true);
+                                        const antebrazoMaxYWorld = bbAntebrazoWorld.max.y;
+
+                                        const bbBrazo = brazoRoot.getHierarchyBoundingVectors(true);
+                                        const brazoMinY = bbBrazo.min.y;
+
+                                        brazoRoot.position.y += (antebrazoMaxYWorld - brazoMinY) - 43;
+                                        brazoRoot.rotation.y = 90 * Math.PI / 180;
+                                    }
+                                };
+                                placeBrazo();
+                                setTimeout(placeBrazo, 200);
+
+                                BABYLON.SceneLoader.ImportMesh("", "", "Muneca.stl", scene, (meshes) => {
+                                    munecaRoot = new BABYLON.TransformNode("munecaRoot", scene);
+                                    meshes.forEach(m => m.parent = munecaRoot);
+                                    munecaRoot.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                                    const materialMuneca = new BABYLON.StandardMaterial("materialMuneca", scene);
+                                    materialMuneca.diffuseColor = new BABYLON.Color3(1, 1, 1);
+                                    materialMuneca.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                                    meshes.forEach(m => m.material = materialMuneca);
+
+                                    const placeMuneca = () => {
+                                        if (brazoRoot) {
+                                            const bbBrazoWorld = brazoRoot.getHierarchyBoundingVectors(true);
+                                            const brazoMaxYWorld = bbBrazoWorld.max.y;
+
+                                            const bbMuneca = munecaRoot.getHierarchyBoundingVectors(true);
+                                            const munecaMinY = bbMuneca.min.y;
+
+                                            munecaRoot.position.y += (brazoMaxYWorld - munecaMinY);
+                                            munecaRoot.rotation.y = 90 * Math.PI / 180;
+                                        }
+                                    };
+
+                                    placeMuneca();
+                                    setTimeout(placeMuneca, 200);
+
+                                    //base de la garra
+                                    BABYLON.SceneLoader.ImportMesh("", "", "Basedelagarra.stl", scene, (meshes) => {
+                                        baseGarraRoot = new BABYLON.TransformNode("baseGarraRoot", scene);
+                                        meshes.forEach(m => m.parent = baseGarraRoot);
+                                        baseGarraRoot.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                                        const materialBaseGarra = new BABYLON.StandardMaterial("materialBaseGarra", scene);
+                                        materialBaseGarra.diffuseColor = new BABYLON.Color3(0, 0, 1);
+                                        materialBaseGarra.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                                        meshes.forEach(m => m.material = materialBaseGarra);
+
+                                        const placeBaseGarra = () => {
+                                            if (munecaRoot) {
+                                                const bbMunecaWorld = munecaRoot.getHierarchyBoundingVectors(true);
+                                                const munecaMaxYWorld = bbMunecaWorld.max.y;
+
+                                                const bbGarra = baseGarraRoot.getHierarchyBoundingVectors(true);
+                                                const garraMinY = bbGarra.min.y;
+
+                                                baseGarraRoot.position.y += (munecaMaxYWorld - garraMinY) - 37;
+                                                baseGarraRoot.rotation.y = 90 * Math.PI / 180;
+                                            }
+                                        };
+
+                                        placeBaseGarra();
+                                        setTimeout(placeBaseGarra, 200);
+
+                                        BABYLON.SceneLoader.ImportMesh("", "", "Engranaje1.stl", scene, (meshes) => {
+                                            engranaje1Root = new BABYLON.TransformNode("engranaje1Root", scene);
+                                            meshes.forEach(m => m.parent = engranaje1Root);
+                                            engranaje1Root.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                                            const materialEngranaje1 = new BABYLON.StandardMaterial("materialEngranaje1", scene);
+                                            materialEngranaje1.diffuseColor = new BABYLON.Color3(0, 0, 1);
+                                            materialEngranaje1.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                                            meshes.forEach(m => m.material = materialEngranaje1);
+
+                                            const placeEngranaje1 = () => {
+                                                if (baseGarraRoot) {
+                                                    const bbGarraWorld = baseGarraRoot.getHierarchyBoundingVectors(true);
+                                                    const garraMaxYWorld = bbGarraWorld.max.y;
+
+                                                    const bbEngranaje = engranaje1Root.getHierarchyBoundingVectors(true);
+                                                    const engranajeMinY = bbEngranaje.min.y;
+
+                                                
+                                                    engranaje1Root.position.y += (garraMaxYWorld - engranajeMinY) - 35;
+                                                    engranaje1Root.rotation.y = 90 * Math.PI / 180;
+                                                }
+                                            };
+
+                                            placeEngranaje1();
+                                            setTimeout(placeEngranaje1, 200);
+
+                                            BABYLON.SceneLoader.ImportMesh("", "", "Engranaje2.stl", scene, (meshes) => {
+                                                engranaje2Root = new BABYLON.TransformNode("engranaje2Root", scene);
+                                                meshes.forEach(m => m.parent = engranaje2Root);
+                                                engranaje2Root.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                                                const materialEngranaje2 = new BABYLON.StandardMaterial("materialEngranaje2", scene);
+                                                materialEngranaje2.diffuseColor = new BABYLON.Color3(0, 0, 1);
+                                                materialEngranaje2.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                                                meshes.forEach(m => m.material = materialEngranaje2);
+
+                                                const placeEngranaje2 = () => {
+                                                    if (engranaje1Root) {
+                                                        const bbEngranaje1World = engranaje1Root.getHierarchyBoundingVectors(true);
+                                                        const engranaje1MaxYWorld = bbEngranaje1World.max.y;
+
+                                                        const bbEngranaje2 = engranaje2Root.getHierarchyBoundingVectors(true);
+                                                        const engranaje2MinY = bbEngranaje2.min.y;
+
+                                                    
+                                                        engranaje2Root.position.y += (engranaje1MaxYWorld - engranaje2MinY) - 27;
+                                                        engranaje2Root.rotation.y = 90 * Math.PI / 180;
+                                                    }
+                                                };
+
+                                                placeEngranaje2();
+                                                setTimeout(placeEngranaje2, 200);
+
+                                                BABYLON.SceneLoader.ImportMesh("", "", "Barra1.stl", scene, (meshes) => {
+                                                    barra1Root = new BABYLON.TransformNode("barra1Root", scene);
+                                                    meshes.forEach(m => m.parent = barra1Root);
+                                                    barra1Root.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                                                    const materialBarra1 = new BABYLON.StandardMaterial("materialBarra1", scene);
+                                                    materialBarra1.diffuseColor = new BABYLON.Color3(0, 0, 1);
+                                                    materialBarra1.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                                                    meshes.forEach(m => m.material = materialBarra1);
+
+                                                    const placeBarra1 = () => {
+                                                        if (engranaje1Root) { 
+                                                            const bbEngranaje1 = engranaje1Root.getHierarchyBoundingVectors(true);
+                                                            const engranaje1MaxY = bbEngranaje1.max.y;
+
+                                                            const bbBarra = barra1Root.getHierarchyBoundingVectors(true);
+                                                            const barraMinY = bbBarra.min.y;
+
+                                                            barra1Root.position.y += (engranaje1MaxY - barraMinY) - 3;
+                                                            barra1Root.rotation.y = 90 * Math.PI / 180;
+                                                        }
+                                                    };
+
+                                                    placeBarra1();
+                                                    setTimeout(placeBarra1, 200);
+
+                                                    BABYLON.SceneLoader.ImportMesh("", "", "Barra2.stl", scene, (meshes) => {
+                                                        barra2Root = new BABYLON.TransformNode("barra2Root", scene);
+                                                        meshes.forEach(m => m.parent = barra2Root);
+                                                        barra2Root.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                                                        const materialPinza1 = new BABYLON.StandardMaterial("materialPinza1", scene);
+                                                        materialPinza1.diffuseColor = new BABYLON.Color3(0, 0, 1); //color
+                                                        materialPinza1.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2); //brillo
+                                                        meshes.forEach(m => m.material = materialPinza1);
+
+                                                        const placeBarra2 = () => {
+                                                            if (engranaje2Root) { 
+                                                                const bbEngranaje2 = engranaje2Root.getHierarchyBoundingVectors(true);
+                                                                const engranaje2MaxY = bbEngranaje2.max.y;
+
+                                                                const bbBarra = barra2Root.getHierarchyBoundingVectors(true);
+                                                                const barraMinY = bbBarra.min.y;
+
+                                                                barra2Root.position.y += (engranaje2MaxY - barraMinY) - 3;
+                                                                barra2Root.rotation.y = 90 * Math.PI / 180;
+                                                            }
+                                                        };
+
+                                                        placeBarra2();
+                                                        setTimeout(placeBarra2, 200);
+
+                                                        BABYLON.SceneLoader.ImportMesh("", "", "Pinza1.stl", scene, (meshes) => {
+                                                            pinza1Root = new BABYLON.TransformNode("pinza1Root", scene);
+                                                            meshes.forEach(m => m.parent = pinza1Root);
+                                                            pinza1Root.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                                                            const materialPinza1 = new BABYLON.StandardMaterial("materialPinza1", scene);
+                                                            materialPinza1.diffuseColor = new BABYLON.Color3(1, 1, 1); //color
+                                                            materialPinza1.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2); //brillo
+                                                            meshes.forEach(m => m.material = materialPinza1);
+
+                                                            const placePinza1 = () => {
+                                                                if (engranaje1Root) { 
+                                                                    const bbEngranaje1 = engranaje1Root.getHierarchyBoundingVectors(true);
+                                                                    const engranaje1MaxY = bbEngranaje1.max.y;
+
+                                                                    const bbPinza = pinza1Root.getHierarchyBoundingVectors(true);
+                                                                    const pinzaMinY = bbPinza.min.y;
+
+                                                                
+                                                                    pinza1Root.position.y += (engranaje1MaxY - pinzaMinY) - 12;
+                                                                    pinza1Root.rotation.y = 90 * Math.PI / 180;
+                                                                }
+                                                            };
+
+                                                            placePinza1();
+                                                            setTimeout(placePinza1, 200);
+
+                                                            BABYLON.SceneLoader.ImportMesh("", "", "Pinza2.stl", scene, (meshes) => {
+                                                                pinza2Root = new BABYLON.TransformNode("pinza2Root", scene);
+                                                                meshes.forEach(m => m.parent = pinza2Root);
+                                                                pinza2Root.scaling = new BABYLON.Vector3(1, 1, 1);
+
+                                                                const materialPinza2 = new BABYLON.StandardMaterial("materialPinza2", scene);
+                                                                materialPinza2.diffuseColor = new BABYLON.Color3(1, 1, 1); //color
+                                                                materialPinza2.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2); //brillo
+                                                                meshes.forEach(m => m.material = materialPinza2);
+
+                                                                const placePinza2 = () => {
+                                                                    if (engranaje2Root) {
+                                                                        const bbEngranaje2 = engranaje2Root.getHierarchyBoundingVectors(true);
+                                                                        const engranaje2MaxY = bbEngranaje2.max.y;
+
+                                                                        const bbPinza2 = pinza2Root.getHierarchyBoundingVectors(true);
+                                                                        const pinza2MinY = bbPinza2.min.y;
+
+                                                                    
+                                                                        pinza2Root.position.y += (engranaje2MaxY - pinza2MinY) - 12;
+                                                                        pinza2Root.rotation.y = 90 * Math.PI / 180;
+                                                                    }
+                                                                };
+
+                                                                placePinza2();
+                                                                setTimeout(placePinza2, 200);
+
+                                                                //ajustar camara al modelo completo
+                                                                setTimeout(ajustarCamaraAlModelo, 600);
+
+                                                                document.getElementById("loading").style.display = "none";
+                                                            });
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                }); 
+                            });     
+                        });         
+                    });             
+                });                 
+            });
+            return scene;
+        }
+
+        createScene();
+
+        engine.runRenderLoop(() => {
+            if (scene) scene.render();
+        });
+
+        window.addEventListener("resize", () => engine.resize());
+
+        //API para MAUI para los sliders
+        window.setEjeCentralRotacionY = function (deg) {
+            if (!ejeRoot) return;
+            ejeRoot.rotation.y = (180 - deg) * Math.PI / 180.0;
+        };
+        window.setAntebrazoRotacionX = function (deg) {
+            if (!antebrazoRoot) return;
+            antebrazoRoot.rotation.x = (90 - deg) * Math.PI / 180.0;
+        };
+        window.setBrazoRotacionX = function (deg) {
+            if (!brazoRoot) return;
+            brazoRoot.rotation.x = (90 - deg) * Math.PI / 180.0;
+        };
+        window.setMunecaRotacionY = function (deg) {
+            if (!munecaRoot) return;
+            munecaRoot.rotation.y = (180 - deg) * Math.PI / 180.0;
+        };
+        window.setBaseGarraRotacionX = function (deg) {
+            if (!baseGarraRoot) return;
+            baseGarraRoot.rotation.x = (90 - deg) * Math.PI / 180.0;
+        };
+        
+    </script>
+</body>
+</html>
