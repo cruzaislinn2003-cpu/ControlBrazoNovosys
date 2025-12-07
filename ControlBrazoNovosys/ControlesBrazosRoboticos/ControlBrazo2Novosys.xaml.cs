@@ -1,10 +1,10 @@
-Ôªøusing CommunityToolkit.Maui.Storage;
+using CommunityToolkit.Maui.Storage;
 using System.IO.Ports;
 using System.Net.Sockets;
 
-namespace ControlBrazoNovosys;
+namespace ControlBrazoNovosys.ControlesBrazosRoboticos;
 
-public partial class ControlBrazoNovosys : ContentPage
+public partial class ControlBrazo2Novosys : ContentPage
 {
     SerialPort serialPort = new SerialPort();
     TcpClient tcpClient;
@@ -13,18 +13,18 @@ public partial class ControlBrazoNovosys : ContentPage
     bool esConexionSerial = false;
     bool esConexionWiFi = false;
 
+
     //lista para guardar posiciones de los servos
     List<(int s1, int s2, int s3, int s4, int s5, int s6)> posicionesGuardadas = new List<(int, int, int, int, int, int)>();
 
     private CancellationTokenSource ctsReproduccion;
-
-    public ControlBrazoNovosys()
-    {
+    public ControlBrazo2Novosys()
+	{
         InitializeComponent();
         LlenarListaDePuertos();
-        webView.Source = "index.html";
+        webView.Source = "index2.html";
+        frameParaNumeroDeRepeticiones.IsVisible = false;
     }
-
     private static double Lerp(double a, double b, double t) => a + (b - a) * t;
 
     private void LlenarListaDePuertos()
@@ -51,6 +51,7 @@ public partial class ControlBrazoNovosys : ContentPage
             PanelDePuertoSerial.IsVisible = true;
             PanelParaIPdeWifi.IsVisible = false;
             BotonesParaConexion.IsVisible = true;
+            LlenarListaDePuertos();
 
         }
         else
@@ -113,7 +114,7 @@ public partial class ControlBrazoNovosys : ContentPage
                 networkStream.Write(buffer, 0, buffer.Length);
             }
 
-            await DisplayAlert("NOVOSYS STEAM", "Conexi√≥n establecida correctamente.", "OK");
+            await DisplayAlert("NOVOSYS STEM", "ConexiÛn establecida correctamente.", "OK");
         }
         catch (Exception ex)
         {
@@ -134,7 +135,7 @@ public partial class ControlBrazoNovosys : ContentPage
                 tcpClient.Close();
             }
 
-            DisplayAlert("NOVOSYS STEAM", "Conexi√≥n cerrada correctamente.", "OK");
+            DisplayAlert("NOVOSYS STEM", "ConexiÛn cerrada correctamente.", "OK");
         }
         catch (Exception ex)
         {
@@ -170,14 +171,15 @@ public partial class ControlBrazoNovosys : ContentPage
     private void servoSlider_ValueChanged(object sender, ValueChangedEventArgs e)
     {
         int valor = (int)e.NewValue;
-        lblAngulo.Text = $"{valor}¬∞";
+        lblAngulo.Text = $"{valor}∞";
         enviarComando("A", (byte)valor);
+        webView.Eval($"setEngranaje1Rotacion({valor})");
     }
 
     private void servoSlider2_ValueChanged(object sender, ValueChangedEventArgs e)
     {
         int valor = (int)e.NewValue;
-        lblAngulo2.Text = $"{valor}¬∞";
+        lblAngulo2.Text = $"{valor}∞";
         enviarComando("B", (byte)valor);
         webView.Eval($"setBaseGarraRotacionX({valor});");
     }
@@ -185,7 +187,7 @@ public partial class ControlBrazoNovosys : ContentPage
     private void servoSlider3_ValueChanged(object sender, ValueChangedEventArgs e)
     {
         int valor = (int)e.NewValue;
-        lblAngulo3.Text = $"{valor}¬∞";
+        lblAngulo3.Text = $"{valor}∞";
         enviarComando("C", (byte)valor);
         webView.Eval($"setMunecaRotacionY({valor});");
     }
@@ -220,7 +222,7 @@ public partial class ControlBrazoNovosys : ContentPage
 
             if (resultado.IsSuccessful)
                 lbl_Etiqueta.Text = "P O S I C I O N E S    D E L   B R A Z O    E X P O R T A D A S";
-                enviarComando("M");
+            enviarComando("M");
         }
         catch (Exception ex)
         {
@@ -235,40 +237,46 @@ public partial class ControlBrazoNovosys : ContentPage
             lbl_Etiqueta.Text = "N E C E S I T A S   A L   M E N O S   D O S   P O S I C I O N E S";
             return;
         }
+        frameParaNumeroDeRepeticiones.IsVisible = true;
+        await frameParaNumeroDeRepeticiones.ScaleTo(1, 250, Easing.CubicOut);
+    }
 
-        string opcion = await DisplayActionSheet(
-            "¬øCu√°ntas veces quieres reproducir?",
-            "Cancelar",
-            null,
-            "1 vez",
-            "3 veces",
-            "5 veces",
-            "Infinito"
-        );
+    private async Task OcultarFrameAsync()
+    {
+        await frameParaNumeroDeRepeticiones.ScaleTo(0.8, 200, Easing.CubicInOut);
+        frameParaNumeroDeRepeticiones.IsVisible = false;
+    }
 
-        if (opcion == "Cancelar" || opcion == null)
-            return;
+    private async void Aceptar_Clicked(object sender, EventArgs e)
+    {
 
-        int repeticiones = 1;
-        bool infinito = false;
-
-        switch (opcion)
+        if (int.TryParse(txtRepeticiones.Text, out int repeticiones) && repeticiones > 0)
         {
-            case "1 vez":
-                repeticiones = 1;
-                break;
-            case "3 veces":
-                repeticiones = 3;
-                break;
-            case "5 veces":
-                repeticiones = 5;
-                break;
-            case "Infinito":
-                infinito = true;
-                break;
+            await OcultarFrameAsync();
+            await IniciarReproduccionAsync(repeticiones);
         }
+        else
+        {
+            lbl_Etiqueta.Text = "I N G R E S A   U N   N ⁄ M E R O   V ¡ L I D O";
+        }
+    }
+    //este emetodo es para el boton de infinito
+    private async void Infinito_Clicked(object sender, EventArgs e)
+    {
+        await OcultarFrameAsync();
+        await IniciarReproduccionAsync(-1);
+    }
+    //Boton de cancelar del panel de numero de reproducciones
+    private async void Cancelar_Clicked(object sender, EventArgs e)
+    {
+        await OcultarFrameAsync();
+    }
 
-        
+    //Utilice este metodo para la logica de la reproduccion solo para mandarlo a llamar junto con el numero de reproducciones
+    private async Task IniciarReproduccionAsync(int repeticiones)
+    {
+        bool infinito = repeticiones == -1;
+
         ctsReproduccion?.Cancel();
         ctsReproduccion = new CancellationTokenSource();
         var token = ctsReproduccion.Token;
@@ -328,19 +336,19 @@ public partial class ControlBrazoNovosys : ContentPage
             }
 
             lbl_Etiqueta.Text = infinito
-                ? "R E P R O D U C C I √ì N   I N F I N I T A"
-                : "R E P R O D U C C I √ì N   F I N A L I Z A D A";
+                ? "R E P R O D U C C I ” N   I N F I N I T A"
+                : "R E P R O D U C C I ” N   F I N A L I Z A D A";
         }
         catch (OperationCanceledException)
         {
-            lbl_Etiqueta.Text = "R E P R O D U C C I √ì N   D E T E N I D A";
+            lbl_Etiqueta.Text = "R E P R O D U C C I ” N   D E T E N I D A";
         }
     }
 
     private void servoSlider4_ValueChanged(object sender, ValueChangedEventArgs e)
     {
         int valor = (int)e.NewValue;
-        lblAngulo4.Text = $"{valor}¬∞";
+        lblAngulo4.Text = $"{valor}∞";
         enviarComando("D", (byte)valor);
         webView.Eval($"setBrazoRotacionX({valor});");
     }
@@ -348,7 +356,7 @@ public partial class ControlBrazoNovosys : ContentPage
     private void servoSlider5_ValueChanged(object sender, ValueChangedEventArgs e)
     {
         int valor = (int)e.NewValue;
-        lblAngulo5.Text = $"{valor}¬∞";
+        lblAngulo5.Text = $"{valor}∞";
         enviarComando("E", (byte)valor);
         webView.Eval($"setAntebrazoRotacionX({valor});");
     }
@@ -356,7 +364,7 @@ public partial class ControlBrazoNovosys : ContentPage
     private void servoSlider6_ValueChanged(object sender, ValueChangedEventArgs e)
     {
         int valor = (int)e.NewValue;
-        lblAngulo6.Text = $"{valor}¬∞";
+        lblAngulo6.Text = $"{valor}∞";
         enviarComando("F", (byte)valor);
         webView.Eval($"setEjeCentralRotacionY({valor});");
     }
@@ -417,12 +425,12 @@ public partial class ControlBrazoNovosys : ContentPage
                     servoSlider5.Value = first.s5;
                     servoSlider6.Value = first.s6;
 
-                    lblAngulo.Text = $"{first.s1}¬∞";
-                    lblAngulo2.Text = $"{first.s2}¬∞";
-                    lblAngulo3.Text = $"{first.s3}¬∞";
-                    lblAngulo4.Text = $"{first.s4}¬∞";
-                    lblAngulo5.Text = $"{first.s5}¬∞";
-                    lblAngulo6.Text = $"{first.s6}¬∞";
+                    lblAngulo.Text = $"{first.s1}∞";
+                    lblAngulo2.Text = $"{first.s2}∞";
+                    lblAngulo3.Text = $"{first.s3}∞";
+                    lblAngulo4.Text = $"{first.s4}∞";
+                    lblAngulo5.Text = $"{first.s5}∞";
+                    lblAngulo6.Text = $"{first.s6}∞";
                 }
                 lbl_Etiqueta.Text = "P O S I C I O N E S    D E L   B R A Z O    I M P O R T A D A S";
                 enviarComando("N");
@@ -522,37 +530,32 @@ public partial class ControlBrazoNovosys : ContentPage
             posicionesGuardadas.AddRange(temp);
             ActualizarPosicionesEditor();
             lbl_Etiqueta.Text = $"S E   C A R G A R O N   {temp.Count}   P O S I C I O N E S   D E S D E   E L   E D I T O R";
-
-            //await DisplayAlert("√âxito", $"Se cargaron {temp.Count} posiciones desde el editor.", "OK");
         }
         else
         {
-            lbl_Etiqueta.Text = "N O   S E   E N C O N T R A R O N   L √ç N E A S   V √Å L I D A S   P A R A   C A R G A R";
-
-            //await DisplayAlert("NOVOSYS STEAM", "No se encontraron l√≠neas v√°lidas para cargar.", "OK");
+            lbl_Etiqueta.Text = "N O   S E   E N C O N T R A R O N   L Õ N E A S   V ¡ L I D A S   P A R A   C A R G A R";
         }
 
         if (invalid.Count > 0)
         {
-            lbl_Etiqueta.Text = $"L √ç N E A S   I N V √Å L I D A S   ( N O   S E   C A R G A R O N ) : \n{string.Join("\n", invalid)}";
+            lbl_Etiqueta.Text = $"L Õ N E A S   I N V ¡ L I D A S   ( N O   S E   C A R G A R O N ) : \n{string.Join("\n", invalid)}";
         }
     }
 
-    
     private async void EliminarDesdeEditor_Clicked(object sender, EventArgs e)
     {
         if (posicionesGuardadas.Count == 0)
         {
-            await DisplayAlert("NOVOSYS STEAM", "No hay posiciones para eliminar.", "OK");
+            lbl_Etiqueta.Text = "N O   H A Y   P O S I C I O N E S   P O R   E L I M I N A R";
             return;
         }
 
         string VentanaEliminar = await DisplayPromptAsync(
-            "Eliminar posici√≥n",
-            $"Ingresa el n√∫mero de la posici√≥n a eliminar (1 - {posicionesGuardadas.Count})",
+            "Eliminar posiciÛn",
+            $"Ingresa el n˙mero de la posiciÛn a eliminar (1 - {posicionesGuardadas.Count})",
             accept: "Eliminar",
             cancel: "Cancelar",
-            placeholder: "N√∫mero (ej. 1)",
+            placeholder: "N˙mero (ej. 1)",
             maxLength: 3,
             keyboard: Keyboard.Numeric);
 
@@ -562,11 +565,11 @@ public partial class ControlBrazoNovosys : ContentPage
         {
             posicionesGuardadas.RemoveAt(index - 1);
             ActualizarPosicionesEditor();
-            await DisplayAlert("Eliminado", $"Se elimin√≥ la posici√≥n #{index}.", "OK");
+            lbl_Etiqueta.Text = $"S E   E L I M I N ”   L A   P O S I C I ” N   #{index}";
         }
         else
         {
-            await DisplayAlert("Error", "N√∫mero inv√°lido.", "OK");
+            lbl_Etiqueta.Text = "N ⁄ M E R O   I N V ¡ L I D O";
         }
     }
 
@@ -581,89 +584,133 @@ public partial class ControlBrazoNovosys : ContentPage
         lbl_Etiqueta.Text = "S E   D E T U V O   L A   B A N D A   T R A N S P O R T A D O R A!!";
     }
 
-    private int angulo = 90;
     private void aumentarAngulo_Clicked(object sender, EventArgs e)
     {
-        if (angulo < 90) 
+        double angulo = servoSlider.Value;
+        if (angulo < 90)
             angulo += 5;
-        lblAngulo.Text = $"{angulo}¬∞";
+        lblAngulo.Text = $"{angulo}∞";
         servoSlider.Value = angulo;
     }
     private void disminuirAngulo_Clicked(object sender, EventArgs e)
     {
+        double angulo = servoSlider.Value;
         if (angulo > 0)
             angulo -= 5;
-        lblAngulo.Text = $"{angulo}¬∞";
+        lblAngulo.Text = $"{angulo}∞";
         servoSlider.Value = angulo;
     }
     private void aumentarAngulo2_Clicked(object sender, EventArgs e)
     {
-        if (angulo < 180)
-            angulo += 5;
-        lblAngulo2.Text = $"{angulo}¬∞";
-        servoSlider2.Value = angulo;
+        double angulo1 = servoSlider2.Value;
+        if (angulo1 < 180)
+            angulo1 += 5;
+        lblAngulo2.Text = $"{angulo1}∞";
+        servoSlider2.Value = angulo1;
     }
     private void disminuirAngulo2_Clicked(object sender, EventArgs e)
     {
-        if (angulo > 0)
-            angulo -= 5;
-        lblAngulo2.Text = $"{angulo}¬∞";
-        servoSlider2.Value = angulo;
+        double angulo1 = servoSlider2.Value;
+        if (angulo1 > 0)
+            angulo1 -= 5;
+        lblAngulo2.Text = $"{angulo1}∞";
+        servoSlider2.Value = angulo1;
     }
     private void aumentarAngulo3_Clicked(object sender, EventArgs e)
     {
-        if (angulo < 180)
-            angulo += 5;
-        lblAngulo3.Text = $"{angulo}¬∞";
-        servoSlider3.Value = angulo;
+        double angulo2 = servoSlider3.Value;
+        if (angulo2 < 180)
+            angulo2 += 5;
+        lblAngulo3.Text = $"{angulo2}∞";
+        servoSlider3.Value = angulo2;
     }
     private void disminuirAngulo3_Clicked(object sender, EventArgs e)
     {
-        if (angulo > 0)
-            angulo -= 5;
-        lblAngulo3.Text = $"{angulo}¬∞";
-        servoSlider3.Value = angulo;
+        double angulo2 = servoSlider3.Value;
+        if (angulo2 > 0)
+            angulo2 -= 5;
+        lblAngulo3.Text = $"{angulo2}∞";
+        servoSlider3.Value = angulo2;
     }
     private void aumentarAngulo4_Clicked(object sender, EventArgs e)
     {
-        if (angulo < 180)
-            angulo += 5;
-        lblAngulo4.Text = $"{angulo}¬∞";
-        servoSlider4.Value = angulo;
+        double angulo3 = servoSlider4.Value;
+        if (angulo3 < 180)
+            angulo3 += 5;
+        lblAngulo4.Text = $"{angulo3}∞";
+        servoSlider4.Value = angulo3;
     }
     private void disminuirAngulo4_Clicked(object sender, EventArgs e)
     {
-        if (angulo > 0)
-            angulo -= 5;
-        lblAngulo4.Text = $"{angulo}¬∞";
-        servoSlider4.Value = angulo;
+        double angulo3 = servoSlider4.Value;
+        if (angulo3 > 0)
+            angulo3 -= 5;
+        lblAngulo4.Text = $"{angulo3}∞";
+        servoSlider4.Value = angulo3;
     }
     private void aumentarAngulo5_Clicked(object sender, EventArgs e)
     {
-        if (angulo < 180)
-            angulo += 5;
-        lblAngulo5.Text = $"{angulo}¬∞";
-        servoSlider5.Value = angulo;
+        double angulo4 = servoSlider5.Value;
+        if (angulo4 < 180)
+            angulo4 += 5;
+        lblAngulo5.Text = $"{angulo4}∞";
+        servoSlider5.Value = angulo4;
     }
     private void disminuirAngulo5_Clicked(object sender, EventArgs e)
     {
-        if (angulo > 0)
-            angulo -= 5;
-        lblAngulo5.Text = $"{angulo}¬∞";
-        servoSlider5.Value = angulo;
+        double angulo4 = servoSlider5.Value;
+        if (angulo4 > 0)
+            angulo4 -= 5;
+        lblAngulo5.Text = $"{angulo4}∞";
+        servoSlider5.Value = angulo4;
     }
     private void aumentarAngulo6_Clicked(object sender, EventArgs e)
     {
-        if (angulo < 180)
-            angulo += 5;
-        lblAngulo6.Text = $"{angulo}¬∞";
-        servoSlider6.Value = angulo;
+        double angulo5 = servoSlider6.Value;
+        if (angulo5 < 180)
+            angulo5 += 5;
+        lblAngulo6.Text = $"{angulo5}∞";
+        servoSlider6.Value = angulo5;
     }
     private void disminuirAngulo6_Clicked(object sender, EventArgs e)
     {
-        if (angulo > 0)
-            angulo -= 5;
-        lblAngulo6.Text = $"{angulo}¬∞";
-        servoSlider6.Value = angulo;
+        double angulo5 = servoSlider6.Value;
+        if (angulo5 > 0)
+            angulo5 -= 5;
+        lblAngulo6.Text = $"{angulo5}∞";
+        servoSlider6.Value = angulo5;
+    }
+
+    private async void Informacion_Clicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("InformaciÛn", "Desarrollado por la residente Aislinn Cruz Rojo.", "OK");
+
+        bool irTutoriales = await DisplayAlert(
+            "Tutorial",
+            "øDeseas ir a ver el tutorial de armado y uso de la interfaz?",
+            "SÌ",
+            "Cancelar"
+        );
+
+        if (irTutoriales)
+        {
+            var url = "https://drive.google.com/tu_enlace_aqui";
+            await Launcher.OpenAsync(url);
+        }
+    }
+
+    private void AbrirMenu_Clicked(object sender, TappedEventArgs e)
+    {
+        Shell.Current.FlyoutIsPresented = true;
+    }
+
+    private void Cerrar_Clicked(object sender, TappedEventArgs e)
+    {
+        Application.Current?.CloseWindow(this.Window);
+    }
+
+    private async void AjustarVista_Clicked(object sender, TappedEventArgs e)
+    {
+        await webView.EvaluateJavaScriptAsync("ajustarvista()");
     }
 }

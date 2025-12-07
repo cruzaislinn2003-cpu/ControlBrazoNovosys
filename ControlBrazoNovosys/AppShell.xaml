@@ -1,14 +1,101 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="ControlBrazoNovosys.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ControlBrazoNovosys"
-    Shell.FlyoutBehavior="Disabled"
-    Title="ControlBrazoNovosys">
+<Shell x:Class="ControlBrazoNovosys.AppShell"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:ControlBrazoNovosys.ControlBrazosRoboticos"
+       Shell.FlyoutBehavior="Flyout">
 
-    <ShellContent
-        ContentTemplate="{DataTemplate local:ControlBrazoNovosys}"
-        Route="ControlBrazoNovosys" />
+    <!--Parte superior de nuestro menu una etiqueta con el logo-->
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="#1976D2"
+              Padding="20"
+              HeightRequest="190">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Frame Grid.Row="0"
+                   WidthRequest="120"
+                   HeightRequest="120"
+                   CornerRadius="60"
+                   BackgroundColor="White"
+                   Padding="0"
+                   HorizontalOptions="Center"
+                   HasShadow="True">
+                <Image Source="logo.png"
+                       Aspect="Fill"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Frame>
+
+            <Label Grid.Row="2"
+                   Text="Control de Brazos"
+                   TextColor="White"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <!--Opciones para el menu-->
+    <FlyoutItem Title="Brazo Principal"
+                FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent Title="Control Brazo 1"
+                      Shell.NavBarIsVisible="False"
+                      ContentTemplate="{DataTemplate local:ControlBrazoNovosys}"
+                      Route="ControlBrazoNovosys" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Brazo Secundario"
+                FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent Title="Control Brazo 2"
+                      Shell.NavBarIsVisible="False"
+                      ContentTemplate="{DataTemplate local:ControlBrazo2Novosys}"
+                      Route="ControlBrazo2Novosys" />
+    </FlyoutItem>
+
+
+
+    <!--Mostrar la version de nuestro sistema-->
+    <Shell.FlyoutFooter>
+        <Grid BackgroundColor="#EF850C"
+              Padding="20,10"
+              HeightRequest="60">
+            <Label Text="Versión 0.0.1"
+                   TextColor="White"
+                   FontSize="16"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start" />
+        </Grid>
+    </Shell.FlyoutFooter>
+
+    <!--Esta seccion de resoruces es solo para darle los estilos para que no tome los predeterminados y coloque los estilos que le estamos pidiendo-->
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Shell">
+                <Setter Property="Shell.BackgroundColor"
+                        Value="White" />
+                <Setter Property="Shell.ForegroundColor"
+                        Value="#1976D2" />
+                <Setter Property="Shell.TitleColor"
+                        Value="White" />
+            </Style>
+
+            <Style TargetType="FlyoutItem">
+                <Setter Property="Shell.BackgroundColor"
+                        Value="#EF850C" />
+                <Setter Property="Shell.ForegroundColor"
+                        Value="White" />
+            </Style>
+
+            <Style TargetType="MenuItem">
+                <Setter Property="Text"
+                        Value="White" />
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
 
 </Shell>

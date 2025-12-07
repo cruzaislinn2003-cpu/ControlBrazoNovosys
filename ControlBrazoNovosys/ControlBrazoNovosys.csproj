@@ -65,7 +65,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="ControlBrazoNovosys.xaml">
+	  <MauiXaml Update="ControlesBrazosRoboticos\ControlBrazo2Novosys.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ControlesBrazosRoboticos\ControlBrazoNovosys.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

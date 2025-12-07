@@ -1,9 +1,52 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24 d17.14
+VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlBrazoNovosys", "ControlBrazoNovosys\ControlBrazoNovosys.csproj", "{BB15ED1B-9048-4C5C-A640-910D9F1AE692}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modelos 3D", "Modelos 3D", "{BF25BA04-EAD7-4A96-A195-B9279658FF48}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Brazo Robotico", "Brazo Robotico", "{C655A826-B50B-42E0-BE85-FF6DBD8342A9}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Antebrazo.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Antebrazo.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Barra1.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Barra1.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Barra2.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Barra2.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Base.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Base.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Basedelagarra.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Basedelagarra.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Brazo.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Brazo.stl
+		..\..\Users\Aisli\Downloads\BaseNueva.stl = ..\..\Users\Aisli\Downloads\BaseNueva.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\EjeCentral.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\EjeCentral.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Engranaje1.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Engranaje1.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Engranaje2.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Engranaje2.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Muneca.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Muneca.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata1.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata1.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata2.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata2.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata3.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata3.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata4.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata4.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata5.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pata5.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pinza1.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pinza1.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pinza2.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Pinza2.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\TapaBase.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\TapaBase.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\TapaEje.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\TapaEje.stl
+		..\..\Users\Aisli\Downloads\TapaBaseNueva.stl = ..\..\Users\Aisli\Downloads\TapaBaseNueva.stl
+		..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Tapagarra.stl = ..\..\Users\Aisli\Downloads\brazo-robotico-arduino-diy-con-control-de-smartphon20240820-1-b97384\FABRI_CREATOR\brazo-robotico-arduino-diy-con-control-de-smartphone-2023\Tapagarra.stl
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Banda Transportadora", "Banda Transportadora", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Users\Aisli\Downloads\Banda Transportadora Parte 1.stl = ..\..\Users\Aisli\Downloads\Banda Transportadora Parte 1.stl
+		..\..\Users\Aisli\Downloads\Banda transportadora Parte 2.stl = ..\..\Users\Aisli\Downloads\Banda transportadora Parte 2.stl
+		..\..\Users\Aisli\Downloads\Banda transportadora Parte 3.stl = ..\..\Users\Aisli\Downloads\Banda transportadora Parte 3.stl
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pantalla Nextion", "Pantalla Nextion", "{CE15D51B-4D20-4B9F-B162-C6A302CB0827}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Users\Aisli\Documents\NEXTON\NovosysPantalla.HMI = ..\..\Users\Aisli\Documents\NEXTON\NovosysPantalla.HMI
+		..\..\Users\Aisli\Downloads\NovosysPantalla.tft = ..\..\Users\Aisli\Downloads\NovosysPantalla.tft
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentacion", "Documentacion", "{B45F8D25-F157-4268-9B5E-8AF70E6BDCBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +63,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C655A826-B50B-42E0-BE85-FF6DBD8342A9} = {BF25BA04-EAD7-4A96-A195-B9279658FF48}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {BF25BA04-EAD7-4A96-A195-B9279658FF48}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B11755A-0FF1-40FB-B4F4-F0A241EFA5B3}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ControlBrazoNovosys.ControlBrazoNovosys">
+             x:Class="ControlBrazoNovosys.ControlesBrazosRoboticos.ControlBrazoNovosys">
     <ScrollView>
 
         <VerticalStackLayout Padding="0,0"
@@ -14,16 +14,76 @@
                        Aspect="Fill"
                        HorizontalOptions="Fill"
                        VerticalOptions="Fill" />
-                <!--Se utilizo una imagen button para el logo para que al momento de presionar me mande a la pagina oficial de la empresa-->
-                <ImageButton x:Name="logo"
-                             Source="logo.png"
-                             Aspect="AspectFit"
-                             HeightRequest="70"
-                             WidthRequest="200"
-                             HorizontalOptions="Start"
-                             VerticalOptions="Start"
-                             BackgroundColor="Transparent"
-                             Clicked="logo_Clicked" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <!-- Para el tipo de conexion -->
+                        <ColumnDefinition Width="500" />
+                        <!-- seleccionar puerto o ingresar IP -->
+                        <ColumnDefinition Width="330" />
+                        <ColumnDefinition Width="700" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <HorizontalStackLayout Grid.Column="0">
+                        <!-- Botón hamburguesa para abrir menú -->
+                        <Frame HeightRequest="50"
+                               WidthRequest="50"
+                               CornerRadius="25"
+                               BackgroundColor="Transparent"
+                               Padding="0"
+                               HasShadow="True"
+                               HorizontalOptions="Start"
+                               VerticalOptions="Center"
+                               Margin="10,0,0,0">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="AbrirMenu_Clicked" />
+                            </Frame.GestureRecognizers>
+                            <Label Text="☰"
+                                   FontSize="28"
+                                   TextColor="#1976D2"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   FontAttributes="Bold" />
+                        </Frame>
+                        <!--Se utilizo una imagen button para el logo para que al momento de presionar me mande a la pagina oficial de la empresa-->
+                        <ImageButton x:Name="logo"
+                                     Source="logo.png"
+                                     Aspect="AspectFit"
+                                     HeightRequest="70"
+                                     WidthRequest="120"
+                                     HorizontalOptions="Start"
+                                     VerticalOptions="Start"
+                                     BackgroundColor="Transparent"
+                                     Clicked="logo_Clicked" />
+                    </HorizontalStackLayout>
+                    <Frame Grid.Column="2"
+                           HeightRequest="45"
+                           WidthRequest="120"
+                           BackgroundColor="#B60002"
+                           CornerRadius="10"
+                           Padding="10"
+                           HasShadow="False"
+                           HorizontalOptions="End"
+                           VerticalOptions="Fill">
+
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="Cerrar_Clicked" />
+                        </Frame.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="10"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Center">
+                            <Image Source="desconectar.png"
+                                   HeightRequest="25"
+                                   WidthRequest="25"
+                                   VerticalOptions="Center" />
+                            <Label Text="Cerrar"
+                                   FontSize="16"
+                                   TextColor="White"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Frame>
+                </Grid>
             </Grid>
             <!--Esta es solo una etiqueta que aparecera como titulo de nuestra app-->
             <VerticalStackLayout VerticalOptions="Center">
@@ -198,18 +258,20 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <!--Aqui es donde se visualiza el modelo en 3D del brazo robotico-->
                 <WebView x:Name="webView"
                          Grid.Column="0"
                          Grid.Row="0"
-                         Grid.RowSpan="6"
+                         Grid.RowSpan="8"
                          Source="index.html"
                          VerticalOptions="Fill"
                          HorizontalOptions="Fill" />
 
                 <!--Seccion de los sliders-->
-                
+
                 <!--Primer slider le pertenece a la garra-->
                 <StackLayout Grid.Row="0"
                              Grid.Column="1"
@@ -225,7 +287,8 @@
                             MinimumTrackColor="#EF850C"
                             MaximumTrackColor="Gray"
                             VerticalOptions="Center" />
-                    <HorizontalStackLayout VerticalOptions="Center" Spacing="5">
+                    <HorizontalStackLayout VerticalOptions="Center"
+                                           Spacing="5">
                         <Label x:Name="lblAngulo"
                                Text="90°"
                                WidthRequest="40"
@@ -233,7 +296,8 @@
                                HorizontalTextAlignment="Center"
                                VerticalOptions="Center" />
 
-                        <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                        <VerticalStackLayout Spacing="5"
+                                             VerticalOptions="Center">
                             <Frame HeightRequest="20"
                                    WidthRequest="20"
                                    CornerRadius="8"
@@ -359,7 +423,8 @@
                             MinimumTrackColor="#EF850C"
                             MaximumTrackColor="Gray"
                             VerticalOptions="Center" />
-                    <HorizontalStackLayout VerticalOptions="Center" Spacing="5">
+                    <HorizontalStackLayout VerticalOptions="Center"
+                                           Spacing="5">
                         <Label x:Name="lblAngulo3"
                                Text="90°"
                                WidthRequest="40"
@@ -367,7 +432,8 @@
                                HorizontalTextAlignment="Center"
                                VerticalOptions="Center" />
 
-                        <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                        <VerticalStackLayout Spacing="5"
+                                             VerticalOptions="Center">
                             <Frame HeightRequest="20"
                                    WidthRequest="20"
                                    CornerRadius="8"
@@ -426,7 +492,8 @@
                             MinimumTrackColor="#EF850C"
                             MaximumTrackColor="Gray"
                             VerticalOptions="Center" />
-                    <HorizontalStackLayout VerticalOptions="Center" Spacing="5">
+                    <HorizontalStackLayout VerticalOptions="Center"
+                                           Spacing="5">
                         <Label x:Name="lblAngulo4"
                                Text="90°"
                                WidthRequest="40"
@@ -494,7 +561,8 @@
                             MinimumTrackColor="#EF850C"
                             MaximumTrackColor="Gray"
                             VerticalOptions="Center" />
-                    <HorizontalStackLayout VerticalOptions="Center" Spacing="5">
+                    <HorizontalStackLayout VerticalOptions="Center"
+                                           Spacing="5">
                         <Label x:Name="lblAngulo5"
                                Text="90°"
                                WidthRequest="40"
@@ -562,7 +630,8 @@
                             MinimumTrackColor="#EF850C"
                             MaximumTrackColor="Gray"
                             VerticalOptions="Center" />
-                    <HorizontalStackLayout VerticalOptions="Center" Spacing="5">
+                    <HorizontalStackLayout VerticalOptions="Center"
+                                           Spacing="5">
                         <Label x:Name="lblAngulo6"
                                Text="90°"
                                WidthRequest="40"
@@ -617,8 +686,9 @@
                 </StackLayout>
 
 
+
                 <!--Seccion de los botones-->
-                
+
                 <!--Boton de Guardar-->
                 <Frame Grid.Row="0"
                        Grid.Column="2"
@@ -868,7 +938,7 @@
                                HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Frame>
-                
+
                 <!--Este es el espacio para el editor-->
                 <VerticalStackLayout Grid.Row="0"
                                      Grid.RowSpan="6"
@@ -948,6 +1018,165 @@
                         </Frame>
                     </HorizontalStackLayout>
                 </VerticalStackLayout >
+
+                <!--Panel para ingresar el numero de reproducciones o los botones de acciones como infinito, aceptar y cancelar-->
+                <Frame x:Name="frameParaNumeroDeRepeticiones"
+                       Grid.RowSpan="6"
+                       Grid.ColumnSpan="5"
+                       IsVisible="False"
+                       BackgroundColor="White"
+                       BorderColor="Blue"
+                       CornerRadius="25"
+                       Padding="25"
+                       WidthRequest="250"
+                       HeightRequest="350"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center">
+                    <VerticalStackLayout Spacing="15"
+                                         VerticalOptions="Center">
+                        <!--Solo es una etiqueta de cuantas veces va a reproducir-->
+                        <Label Text="¿Cuántas veces quieres reproducir?"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="Black" />
+                        <!-- Entry para ingresar el numero de reproducciones-->
+                        <Entry x:Name="txtRepeticiones"
+                               Placeholder="Ejemplo: 5"
+                               Keyboard="Numeric"
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               WidthRequest="200"
+                               HorizontalTextAlignment="Center"
+                               TextColor="Black"
+                               BackgroundColor="White" />
+                        <!--boton de aceptar-->
+                        <Frame HeightRequest="50"
+                               WidthRequest="200"
+                               BackgroundColor="#1976D2"
+                               CornerRadius="10"
+                               Padding="10"
+                               HasShadow="False"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center">
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Aceptar_Clicked" />
+                            </Frame.GestureRecognizers>
+
+                            <HorizontalStackLayout Spacing="10"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center">
+
+                                <Image Source="conectar.png"
+                                       HeightRequest="25"
+                                       WidthRequest="25"
+                                       VerticalOptions="Center" />
+                                <Label Text="Aceptar"
+                                       FontSize="16"
+                                       TextColor="White"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center" />
+
+                            </HorizontalStackLayout>
+                        </Frame>
+                        <!-- Boton de infinito -->
+                        <Frame HeightRequest="50"
+                               WidthRequest="200"
+                               BackgroundColor="#1976D2"
+                               CornerRadius="10"
+                               Padding="10"
+                               HasShadow="False"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center">
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Infinito_Clicked" />
+                            </Frame.GestureRecognizers>
+
+                            <HorizontalStackLayout Spacing="10"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center">
+                                <Image Source="infinito.png"
+                                       HeightRequest="25"
+                                       WidthRequest="25"
+                                       VerticalOptions="Center" />
+                                <Label Text="Infinito"
+                                       FontSize="16"
+                                       TextColor="White"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Frame>
+                        <!-- Botón cancelar -->
+                        <Frame HeightRequest="50"
+                               WidthRequest="200"
+                               BackgroundColor="#EF850C"
+                               CornerRadius="10"
+                               Padding="10"
+                               HasShadow="False"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center">
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Cancelar_Clicked" />
+                            </Frame.GestureRecognizers>
+
+                            <HorizontalStackLayout Spacing="10"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center">
+                                <Image Source="desconectar.png"
+                                       HeightRequest="25"
+                                       WidthRequest="25"
+                                       VerticalOptions="Center" />
+                                <Label Text="Cancelar"
+                                       FontSize="16"
+                                       TextColor="White"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="0"
+                       Grid.Row="7"
+                       HeightRequest="45"
+                       WidthRequest="160"
+                       BackgroundColor="#EF850C"
+                       CornerRadius="10"
+                       Padding="10"
+                       HasShadow="False"
+                       HorizontalOptions="Fill"
+                       VerticalOptions="Center">
+
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="AjustarVista_Clicked" />
+                    </Frame.GestureRecognizers>
+
+                    <HorizontalStackLayout Spacing="10"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center">
+                        <Image Source="ajustarcamara.png"
+                               HeightRequest="25"
+                               WidthRequest="25"
+                               VerticalOptions="Center" />
+                        <Label Text="Ajustar Vista"
+                               FontSize="16"
+                               TextColor="White"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Frame>
+                <ImageButton Grid.Column="5"
+                             Grid.Row="7"
+                             Source="informacion.png"
+                             HeightRequest="30"
+                             WidthRequest="30"
+                             CornerRadius="19"
+                             BackgroundColor="White"
+                             HorizontalOptions="End"
+                             VerticalOptions="Center"
+                             Clicked="Informacion_Clicked" />
             </Grid>
         </VerticalStackLayout>
     </ScrollView>
