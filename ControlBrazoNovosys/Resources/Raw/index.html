@@ -82,7 +82,7 @@
 
             //ajustar la camara
             function ajustarCamaraAlModelo() {
-                const malla = escena.malla.filter(m => m && m.name !== "__root__");
+                const malla = escena.meshes.filter(m => m && m.name !== "__root__");
                 if (malla.length === 0) return;
 
                 let min = new BABYLON.Vector3(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
@@ -509,7 +509,7 @@
                                                         //se carga la pinza 1
                                                         BABYLON.SceneLoader.ImportMesh("", "", "Pinza1.stl", escena, (malla) => {
 
-                                                            pinza1Pivot = new BABYLON.TransformNode("pinza1Pivot", scene);
+                                                            pinza1Pivot = new BABYLON.TransformNode("pinza1Pivot", escena);
                                                             pinza1Pivot.parent = engranaje1Pivot;
 
                                                             pinza1Root = new BABYLON.TransformNode("pinza1Root", escena);
