@@ -705,7 +705,7 @@ public partial class ControlBrazoNovosys : ContentPage
 
         if (irTutoriales)
         {
-            var url = "https://drive.google.com/tu_enlace_aqui";
+            var url = "https://drive.google.com/drive/folders/1m-73p9eaEF_60qqi2GPkMe7dkHAjnpBM?usp=sharing";
             await Launcher.OpenAsync(url);
         }
         }

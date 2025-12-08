@@ -51,7 +51,7 @@
 
         // Pivotes para pider realizar los movimientos
         let ejePivot, antebrazoPivot, brazoPivot, munecaPivot, baseGarraPivot, engranaje1Pivot, engranaje2Pivot, barra1Pivot, barra2Pivot, pinza1Pivot;
-        
+
         function Crearescena() {
             escena = new BABYLON.Scene(motorgrafico);
             escena.clearColor = new BABYLON.Color3(1, 1, 1);
@@ -336,7 +336,7 @@
                                         BABYLON.SceneLoader.ImportMesh("", "", "Engranaje1.stl", escena, (malla) => {
                                             engranaje1Pivot = new BABYLON.TransformNode("engranaje1Pivot", escena);
                                             engranaje1Pivot.parent = baseGarraPivot;
-                                            
+
 
                                             engranaje1Root = new BABYLON.TransformNode("engranaje1Root", escena);
                                             engranaje1Root.parent = engranaje1Pivot;
@@ -360,7 +360,7 @@
                                                     const engranajeMinZ = bbEngranaje.min.z;
 
                                                     const centroEngranaje = new BABYLON.Vector3(
-                                                        (engranajeMinX + engranajeMaxX+15) / 2,
+                                                        (engranajeMinX + engranajeMaxX + 15) / 2,
                                                         engranajeMinY + 10,
                                                         engranajeMinZ + 12
                                                     );
@@ -508,9 +508,9 @@
 
                                                         //se carga la pinza 1
                                                         BABYLON.SceneLoader.ImportMesh("", "", "Pinza1.stl", escena, (malla) => {
-                                                            
+
                                                             pinza1Pivot = new BABYLON.TransformNode("pinza1Pivot", scene);
-                                                            pinza1Pivot.parent = engranaje1Pivot; 
+                                                            pinza1Pivot.parent = engranaje1Pivot;
 
                                                             pinza1Root = new BABYLON.TransformNode("pinza1Root", escena);
                                                             pinza1Root.parent = pinza1Pivot;
@@ -657,13 +657,13 @@
             }
             if (engranaje2Pivot) {
                 engranaje2Pivot.rotation.x = -rotacionEngranaje1;
-            } 
+            }
             if (barra1Pivot) {
                 barra1Pivot.rotation.x = -rotacionbarra1;
             }
             if (pinza2Pivot) {
                 pinza2Pivot.rotation.x = rotacionpinza1;
-            } 
+            }
         };
 
         window.ajustarvista = function () {
